@@ -82,7 +82,7 @@ export default function Navbar() {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 30 30"
-              className="fill-indigo-600 h-8 w-8 group-hover:fill-indigo-500 group-hover:rounded-full"
+              className="fill-slate-700 h-8 w-8 group-hover:fill-indigo-500 group-hover:rounded-lg"
               width="32"
               height="32"
             >

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SelectAreaCodeInForm from "@/app/components/SelectAreaCodeInForm"
 
 export default function Form() {
   const [firstName, setFirstName] = useState("");
@@ -19,6 +20,7 @@ export default function Form() {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
+  const [areaCode, setAreaCode] = useState("");
   const [eventDetails, setEventDetails] = useState("");
 
   const handleSubmit = async (e: any) => {
@@ -44,6 +46,7 @@ export default function Form() {
         city,
         state,
         zipCode,
+        areaCode,
         eventDetails,
       }),
     });
@@ -65,6 +68,7 @@ export default function Form() {
       setCity("");
       setState("");
       setZipCode("");
+      setAreaCode("");
       setEventDetails("");
     }
   };
@@ -184,9 +188,15 @@ export default function Form() {
             <option value="">Select event style</option>
             <option value="Plated meal">Plated meal</option>
             <option value="Buffet style">Buffet style</option>
-            <option value="Cocktail/​Hors d'oeuvres">
-              Cocktail/​Hors d'oeuvres
-            </option>
+            <option value="Cocktail reception">Cocktail reception</option>
+            <option value="Family style">Family style</option>
+            <option value="Stations">Stations</option>
+            <option value="Picnic/Barbecue">Picnic/Barbecue</option>
+            <option value="Boxed lunches">Boxed lunches</option>
+            <option value="Food truck">Food truck</option>
+            <option value="Tea party">Tea party</option>
+            <option value="Tasting menus">Tasting menus</option>
+            <option value="Other">Other</option>
           </select>
         </div>
         <div className="mb-6">
@@ -253,6 +263,10 @@ export default function Form() {
             className="flex h-10 rounded-md border border-slate-300 bg-white py-2 px-3 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 w-full hover:ring-slate-300 hover:ring-1 ease-in-out duration-500"
           />
         </div>
+        <div className="mb-6">
+
+  <SelectAreaCodeInForm onAreaCodeSelected={setAreaCode} />
+</div>
 
         <div className="flex mb-6">
           <div className="w-1/3 pr-2">
@@ -309,8 +323,8 @@ export default function Form() {
           Request Quotes
         </button>
         <p className="mt-6 flex justify-center text-sm font-medium text-gray-500">
-        Absolutely free with zero commitments or obligations
-                      </p>
+          Absolutely free with zero commitments or obligations
+        </p>
       </form>
     </>
   );
