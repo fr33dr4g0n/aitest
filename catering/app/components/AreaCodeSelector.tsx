@@ -427,15 +427,14 @@ export default function AreaCodeSelector() {
         });
 
   const handlePostCodeChange = async (postCode) => {
-    const selectedPostCodes = user?.unsafeMetadata?.selectedPostCodes || [];
+    const selectedPostCodes: any[] =
+      user?.unsafeMetadata?.selectedPostCodes || [];
 
-    const updatedSelectedPostCodes = (selectedPostCodes as any[]).some(
+    const updatedSelectedPostCodes = selectedPostCodes.some(
       (selected) => selected.code === postCode.code
     )
-      ? (selectedPostCodes as any[]).filter(
-          (selected) => selected.code !== postCode.code
-        )
-      : [...selectedPostCodes, postCode];
+      ? selectedPostCodes.filter((selected) => selected.code !== postCode.code)
+      : [...(selectedPostCodes as any[]), postCode];
 
     try {
       await user.update({
