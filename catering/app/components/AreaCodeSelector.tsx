@@ -410,7 +410,7 @@ const postCodes = [
   { code: "867 - Whitehorse (Yukon)" },
 ];
 
-function classNames(...classes:any) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -432,8 +432,9 @@ export default function AreaCodeSelector() {
     const updatedSelectedPostCodes = (selectedPostCodes as any[]).some(
       (selected) => selected.code === postCode.code
     )
-    
-      ? selectedPostCodes.filter((selected) => selected.code !== postCode.code)
+      ? (selectedPostCodes as any[]).filter(
+          (selected) => selected.code !== postCode.code
+        )
       : [...selectedPostCodes, postCode];
 
     try {
