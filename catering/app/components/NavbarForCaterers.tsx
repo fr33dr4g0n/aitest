@@ -128,7 +128,7 @@ export default function NavbarForCaterers() {
             {/* Signed out users get sign in button */}
             <div className="gap-x-12">
               <SignUpButton />
-              <SignInButton className="pl-4" />
+              <SignInButton />
             </div>
           </SignedOut>
         </div>

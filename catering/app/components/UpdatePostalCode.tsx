@@ -10,33 +10,37 @@ const UpdatePostalCode = () => {
   const { user } = useUser();
 
   const updateMetadata = async (postalCode) => {
-    try {
-      const response = await user.update({
-        unsafeMetadata: { postalCode: postalCode },
-      });
-      if (response) {
-        console.log('res', response);
+    if (user) {
+      try {
+        const response = await user.update({
+          unsafeMetadata: { postalCode: postalCode },
+        });
+        if (response) {
+          console.log('res', response);
+        }
+      } catch (err) {
+        console.error('error', err);
       }
-    } catch (err) {
-      console.error('error', err);
+    } else {
+      console.error('User is undefined or null');
     }
   };
-
+  
   const handleChange = (event) => {
     setPostalCode(event.target.value);
   };
-
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     updateMetadata(postalCode);
   };
-
+  
   return (
     <>
     <div className="mb-14">
     <h2 className="text-base font-semibold leading-7 text-gray-900">Service areas</h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-         {DisplayPostalCode}
+         <DisplayPostalCode />
           </p>    <form onSubmit={handleSubmit}>
       <div className="sm:col-span-2">
         <div className="mt-2">

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Combobox } from "@headlessui/react";
 import { useUser } from "@clerk/clerk-react";
 import { useRouter } from "next/navigation";
+
 const postCodes = [
   { code: "205 - Birmingham, Alabaster, Bessemer (Alabama)" },
   { code: "251 - Mobile, Prichard (Alabama)" },
@@ -418,6 +419,7 @@ export default function AreaCodeSelector() {
   const { user } = useUser();
   const [query, setQuery] = useState("");
   const router = useRouter();
+  const [selectedPostCodes, setSelectedPostCodes] = useState<any[]>([]);
 
   const filteredPostCodes =
     query === ""
@@ -425,107 +427,126 @@ export default function AreaCodeSelector() {
       : postCodes.filter((postCode) => {
           return postCode.code.toLowerCase().includes(query.toLowerCase());
         });
+  
 
+        useEffect(() => {
+          // Update the state as soon as the user's data is available
+          if (Array.isArray(user?.unsafeMetadata?.selectedPostCodes)) {
+            setSelectedPostCodes(user?.unsafeMetadata?.selectedPostCodes ?? []);
+          }
+        }, [user]); // React will re-run the effect if the user's data changes
+        
+
+        
+      
   const handlePostCodeChange = async (postCode) => {
-    const selectedPostCodes: any[] =
-      user?.unsafeMetadata?.selectedPostCodes || [];
+    const selectedPostCodes = (user?.unsafeMetadata?.selectedPostCodes as Array<any>) || [];
 
     const updatedSelectedPostCodes = selectedPostCodes.some(
       (selected) => selected.code === postCode.code
     )
       ? selectedPostCodes.filter((selected) => selected.code !== postCode.code)
-      : [...(selectedPostCodes as any[]), postCode];
+      : [...selectedPostCodes, postCode];
 
-    try {
-      await user.update({
-        unsafeMetadata: { selectedPostCodes: updatedSelectedPostCodes },
-      });
-      router.refresh();
-    } catch (err) {
-      console.error("error", err);
+    if (user) {
+      try {
+        await user.update({
+          unsafeMetadata: { selectedPostCodes: updatedSelectedPostCodes },
+        });
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+        // Handle error
+      }
+    } else {
+      // Handle situation when user is null or undefined
     }
   };
 
-  const selectedPostCodes = user?.unsafeMetadata?.selectedPostCodes || [];
-
   return (
-    <div className="mt-4">
-      <Combobox as="div" value={null} onChange={handlePostCodeChange}>
-        <Combobox.Label className="text-sm font-semibold text-slate-500 hover:text-slate-600"></Combobox.Label>
-        <div className="relative mt-2">
-          <Combobox.Input
-            className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-200 focus:ring-1 focus:ring-inset focus:ring-gray-200 sm:text-sm sm:leading-6"
-            onChange={(event) => setQuery(event.target.value)}
-            displayValue={(postCode) => postCode?.code}
-            placeholder="Search area code"
-          />
-          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-            <ChevronUpDownIcon
-              className="h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
-          </Combobox.Button>
+    <>
+    {
 
-          {filteredPostCodes.length > 0 && (
-            <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base ring-1 ring-gray-900 ring-opacity-5 focus:outline-none sm:text-sm">
-              {filteredPostCodes.map((postCode) => (
-                <Combobox.Option
-                  key={postCode.code}
-                  value={postCode}
-                  className={({ active }) =>
-                    classNames(
-                      "relative cursor-default select-none py-2 pl-3 pr-9",
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-900"
-                    )
-                  }
-                >
-                  {({ active, selected }) => (
-                    <>
-                      <span
-                        className={classNames(
-                          "block truncate",
-                          selected && "font-semibold"
-                        )}
-                      >
-                        {postCode.code}
-                      </span>
+<div className="mt-4">
+  <Combobox as="div" value={null} onChange={handlePostCodeChange}>
+    <Combobox.Label className="text-sm font-semibold text-slate-500 hover:text-slate-600"></Combobox.Label>
+    <div className="relative mt-2">
+      <Combobox.Input
+        className="w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-200 focus:ring-1 focus:ring-inset focus:ring-gray-200 sm:text-sm sm:leading-6"
+        onChange={(event) => setQuery(event.target.value)}
+        placeholder="Search area code"
+      />
+      <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+        <ChevronUpDownIcon
+          className="h-5 w-5 text-gray-400"
+          aria-hidden="true"
+        />
+      </Combobox.Button>
 
-                      {selected && (
-                        <span
-                          className={classNames(
-                            "absolute inset-y-0 right-0 flex items-center pr-4",
-                            active ? "text-white" : "text-gray-200"
-                          )}
-                        >
-                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                        </span>
-                      )}
-                    </>
-                  )}
-                </Combobox.Option>
-              ))}
-            </Combobox.Options>
-          )}
-        </div>
-      </Combobox>
-
-      <div className="mt-2 mb-4">
-        {selectedPostCodes.map((postCode) => (
-          <span
-            key={postCode.code}
-            className="inline-flex items-center gap-x-1.5 rounded px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200 mr-2"
-          >
-            <svg
-              className="h-1.5 w-1.5 fill-green-500"
-              viewBox="0 0 6 6"
-              aria-hidden="true"
+      {filteredPostCodes.length > 0 && (
+        <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base ring-1 ring-gray-900 ring-opacity-5 focus:outline-none sm:text-sm">
+          {filteredPostCodes.map((postCode) => (
+            <Combobox.Option
+              key={postCode.code}
+              value={postCode}
+              className={({ active }) =>
+                classNames(
+                  "relative cursor-default select-none py-2 pl-3 pr-9",
+                  active ? "bg-gray-100 text-gray-900" : "text-gray-900"
+                )
+              }
             >
-              <circle cx={3} cy={3} r={3} />
-            </svg>
-            {postCode.code}
-          </span>
-        ))}
-      </div>
+              {({ active, selected }) => (
+                <>
+                  <span
+                    className={classNames(
+                      "block truncate",
+                      selected && "font-semibold"
+                    )}
+                  >
+                    {postCode.code}
+                  </span>
+
+                  {selected && (
+                    <span
+                      className={classNames(
+                        "absolute inset-y-0 right-0 flex items-center pr-4",
+                        active ? "text-white" : "text-gray-200"
+                      )}
+                    >
+                      <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                  )}
+                </>
+              )}
+            </Combobox.Option>
+          ))}
+        </Combobox.Options>
+      )}
     </div>
+  </Combobox>
+
+  <div className="mt-2 mb-4">
+    {selectedPostCodes.map((postCode) => (
+      <span
+        key={postCode.code}
+        className="inline-flex items-center gap-x-1.5 rounded px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200 mr-2"
+      >
+        <svg
+          className="h-1.5 w-1.5 fill-green-500"
+          viewBox="0 0 6 6"
+          aria-hidden="true"
+        >
+          <circle cx={3} cy={3} r={3} />
+        </svg>
+        {postCode.code}
+      </span>
+    ))}
+  </div>
+</div>
+    }
+    </>
   );
 }
+
+

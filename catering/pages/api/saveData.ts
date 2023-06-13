@@ -23,6 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       state,
       zipCode,
       eventDetails,
+      areaCode,
     } = req.body;
 
     try {
@@ -30,21 +31,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         data: {
           firstName,
           lastName,
-          organization,
-          title,
           phone,
           email,
           dateOfEvent,
-          timeOfEvent,
           eventStyle,
           numberOfGuests,
           estimatedBudget,
           addressLine1,
-          addressLine2,
           city,
           state,
           zipCode,
           eventDetails,
+          areaCode
         },
       });
 

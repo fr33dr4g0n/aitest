@@ -5,12 +5,12 @@ import NavbarForCaterers from "@/app/components/NavbarForCaterers";
 import Footer from "@/app/components/Footer";
 import QuoteTwo from "@/app/components/QuoteTwo";
 import { currentUser } from "@clerk/nextjs";
-import AreaCodeSelector from "@/app/components/AreaCodeSelector";
+import  AreaCodeSelector from "@/app/components/AreaCodeSelector";
 const prisma = new PrismaClient();
 
 async function getData() {
   const user = await currentUser()
-  const selectedPostCodes = user?.unsafeMetadata?.selectedPostCodes || [];
+  const selectedPostCodes = (user?.unsafeMetadata?.selectedPostCodes || []) as { code: string }[];
 
   const res = await prisma.formData.findMany({
     where: {
@@ -44,20 +44,16 @@ export default async function Dashboard() {
 
       {quotes.map((quote) => (
         <QuoteTwo
-          key={quote.firstName + quote.timeOfEvent}
+          key={quote.firstName + quote.dateOfEvent}
           firstName={quote.firstName}
           lastName={quote.lastName}
-          organization={quote.organization}
-          title={quote.title}
           phone={quote.phone}
           email={quote.email}
           dateOfEvent={quote.dateOfEvent}
-          timeOfEvent={quote.timeOfEvent}
           eventStyle={quote.eventStyle}
           numberOfGuests={quote.numberOfGuests}
           estimatedBudget={quote.estimatedBudget}
           addressLine1={quote.addressLine1}
-          addressLine2={quote.addressLine2}
           city={quote.city}
           state={quote.state}
           zipCode={quote.zipCode}

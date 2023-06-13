@@ -7,10 +7,10 @@ import {
   TooltipTrigger,
 } from "@/app/components/ui/tooltip";
 
-
 function formatDateAndTime(dateString: any) {
   const date = new Date(dateString);
-  const options = {
+
+  const options: Intl.DateTimeFormatOptions = {
     dateStyle: "long",
     timeStyle: "short",
     timeZone: "UTC",
@@ -18,6 +18,7 @@ function formatDateAndTime(dateString: any) {
 
   return new Intl.DateTimeFormat("en-US", options).format(date);
 }
+
 
 export default function QuoteTwo(props: any) {
   const formattedDateAndTime = formatDateAndTime(props.dateOfEvent);

@@ -436,7 +436,6 @@ export default function SelectAreaCodeInForm({ onAreaCodeSelected }) {
         <Combobox.Input
           className="flex rounded-md border border-slate-300 bg-white py-2 px-3 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-50 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-900 w-full hover:ring-slate-300 hover:ring-1 ease-in-out duration-500"
           onChange={(event) => setQuery(event.target.value)}
-          displayValue={(code) => code?.code}
           placeholder="Select area code"
         />
         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
@@ -449,7 +448,7 @@ export default function SelectAreaCodeInForm({ onAreaCodeSelected }) {
           <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             {filteredPostCodes.map((code) => (
               <Combobox.Option
-                key={code.id}
+                key={code.code}
                 value={code}
                 className={({ active }) =>
                   classNames(
