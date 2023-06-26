@@ -98,7 +98,7 @@ export default function AboveFoldTwo() {
 
           <div className="lg:flex-shrink-0 lg:flex-grow">
             <img
-              src="/chef-serving-food (4).svg"
+              src="/chef-serving-food.svg"
               className="mx-auto w-[39rem] max-w-full drop-shadow-xl -mt-20"
             />
           </div>
